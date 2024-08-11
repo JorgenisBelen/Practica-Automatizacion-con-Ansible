@@ -1,0 +1,49 @@
+---
+- name: Configuración del servidor con Ansible
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Actualizar la caché de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Instalar Cowsay
+      apt:
+        name: cowsay
+        state: present
+
+    - name: Crear un archivo en el servidor
+      file:
+        path: /home/{{ ansible_user }}/archivo.txt
+        state: touch
+
+    - name: Copiar archivos al servidor
+      copy:
+        src: /ruta/local/al/archivo
+        dest: /ruta/remota/del/archivo
+
+    - name: Crear carpetas en el servidor
+      file:
+        path: /home/{{ ansible_user }}/carpeta
+        state: directory
+        mode: '0755'
+
+    - name: Iniciar el servicio de Apache
+      service:
+        name: apache2
+        state: started
+
+    - name: Agregar un usuario al servidor
+      user:
+        name: nuevo_usuario
+        state: present
+        groups: sudo
+
+    - name: Ejecutar un script en el servidor
+      command: /ruta/al/script.sh
